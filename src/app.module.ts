@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BqCache } from './bqcache/bqcache.entity';
-import { BqCacheModule } from './bqcache/bqcache.module';
+import { CeramicModule } from './ceramic/ceramic.module';
 import { DataModule } from './data/data.module';
 
 @Module({
@@ -14,7 +14,7 @@ import { DataModule } from './data/data.module';
     database: 'test',
     entities: [BqCache],
     synchronize: true,
-  }), DataModule],
+  }), DataModule, CeramicModule],
   // controllers: [],
   // providers: [],
 })
