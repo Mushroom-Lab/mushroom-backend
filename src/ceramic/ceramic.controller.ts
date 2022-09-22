@@ -30,7 +30,7 @@ export class CeramicController {
         @Query('guild_id') guild_id: number,
         @Query('user_id') user_id: number,
         @Query('level') level: number
-    ): Promise<string[]> {
+    ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
