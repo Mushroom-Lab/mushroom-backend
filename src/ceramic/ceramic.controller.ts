@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post, Param, Body } from "@nestjs/common";
+import { Controller, Get, Query, Post, Param, Body, ParseIntPipe } from "@nestjs/common";
 import { CeramicService } from "./ceramic.service";
 
 @Controller('ceramic')
@@ -18,8 +18,8 @@ export class CeramicController {
     @Post('save_session')
     async saveSession(
         @Body('session') session: string,
-        @Body('user_id') user_id: number,
-        @Body('guild_id') guild_id: number,
+        @Body('user_id', new ParseIntPipe()) user_id: number,
+        @Body('guild_id', new ParseIntPipe()) guild_id: number,
         @Body('address') address: string
     ) {
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
@@ -27,9 +27,9 @@ export class CeramicController {
 
     @Post('write_profile')
     async postProfileToCeramic(
-        @Body('guild_id') guild_id: number,
-        @Body('user_id') user_id: number,
-        @Body('level') level: number
+        @Body('guild_id', new ParseIntPipe()) guild_id: number,
+        @Body('user_id', new ParseIntPipe()) user_id: number,
+        @Body('level', new ParseIntPipe()) level: number
     ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
@@ -39,8 +39,8 @@ export class CeramicController {
 
     @Get('get_profile')
     async getProfileFromCeramic(
-        @Query('guild_id') guild_id: number,
-        @Query('user_id') user_id: number
+        @Query('guild_id', new ParseIntPipe()) guild_id: number,
+        @Query('user_id', new ParseIntPipe()) user_id: number
     ): Promise<string> {
         // ["0", profile]
         // ["1", "user+guild not exist"]
