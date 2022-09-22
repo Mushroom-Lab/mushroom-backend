@@ -59,6 +59,8 @@ export class CeramicService {
         const entry = this.userSessionRepository.create({
             hash, session, userId: user_id, guildId: guild_id, address,
         });
+
+        console.log("saveUserSession entry", entry)
         
         await this.userSessionRepository.save(entry); // save = insert or update
     }
