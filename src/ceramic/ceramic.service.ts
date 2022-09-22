@@ -6,91 +6,124 @@ import { DID } from 'dids'
 import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { getResolver } from 'key-did-resolver'
 import { fromString } from 'uint8arrays'
+import { UserSession  } from "./ceramic.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import * as shajs from 'sha.js';
+import { DIDSession } from "did-session";
+import { Wallet, utils } from 'ethers'
+
 import modelAliases from './model.json' assert {type: "json"}
 
 @Injectable()
 export class CeramicService {
 
+    private ceramic = new CeramicClient('https://ceramic.staging.dpopp.gitcoin.co/')
+    private signer = Wallet.fromMnemonic(process.env.MNEMONIC)
+
     constructor(
-        // private readonly bqCacheService: BqCacheService,
+        @InjectRepository(UserSession)
+        private userSessionRepository: Repository<UserSession>,
     ){}
 
-
-    async test() {
-
+    async test(name: string, address: string, date: string): Promise<string> {
         // The key must be provided as an environment variable
         const key = fromString('849f318c3eb64b95fc17c9292d80a1c7d72da433da0ddca7acdda3a3e10d523d', 'base16')
         // Create and authenticate the DID
         const did = new DID({
-        provider: new Ed25519Provider(key),
-        resolver: getResolver(),
+            provider: new Ed25519Provider(key),
+            resolver: getResolver(),
         })
         await did.authenticate()
 
         // Create the Ceramic instance and inject the DID
-        const ceramic = new CeramicClient('http://localhost:7007')
+        // const ceramic = new CeramicClient('http://localhost:7007')
+        const ceramic = new CeramicClient('https://ceramic.staging.dpopp.gitcoin.co/')
         ceramic.did = did
 
         // Create the model and store
         const model = new DataModel({ ceramic, aliases: modelAliases })
         const store = new DIDDataStore({ ceramic, model })
 
-        await store.set('myNote', { text: 'This is my note 333' })
+        const streamid = await store.set('myNote', { text: `name: ${name}, address: ${address}, date: ${date}` })
         const result = await store.get('myNote')
         console.log(result)
-        console.log(store)
+        console.log(streamid.toString())
+        return streamid.toUrl()
     }
 
-//     async getHoldersProjectDistribution(contract: string): Promise<string> {
-//         const sql = `with bayc_holders as (
-//             select address, contract, balance
-//             from sound-district-357507.intermediate_data.nft_balances_all
-//             where contract = "${contract}"
-//           ),
-//           other_collections as (
-//             select nba.contract, count(1) as cnt
-//             from sound-district-357507.intermediate_data.nft_balances_all as nba
-//             inner join bayc_holders as bh
-//             on nba.address = bh.address
-//             where nba.contract != "${contract}"
-//             group by nba.contract
-//           ),
-//           bayc_holder_num as (
-//             select count(1) as bayc_holder_num
-//             from bayc_holders
-//           )
-          
-//           select
-//             oc.contract,
-//             oc.cnt,
-//             bhn.bayc_holder_num,
-//             oc.cnt/bhn.bayc_holder_num as ratio,
-//             c.name,
-//             c.image
-//           from other_collections as oc
-//           inner join sound-district-357507.nft.collections as c
-//           on oc.contract = c.id
-//           cross join bayc_holder_num as bhn
-//           order by oc.cnt desc`;
+    // session <-> db
+    // id number, user_id number, guild_id number, session string, address string
+    async saveUserSession(session: string, user_id: number, guild_id: number, address: string) {        
+        const hash = shajs('sha256').update(`${user_id}_${guild_id}`).digest('hex').toString();
+        const entry = this.userSessionRepository.create({
+            hash, session, userId: user_id, guildId: guild_id, address,
+        });
+        await this.userSessionRepository.save(entry); // save = insert or update
+    }
 
-//         return this.bqCacheService.getDataBySql(sql)
-//     }
+    async signMessage(msg: string): Promise<string> {
+        const signature = await this.signer.signMessage(msg)
+        return signature
+    }
 
-//     async getPoapByKeywords(keyword: string): Promise<string> {
-//       const sql = `SELECT name, description, event_id FROM sound-district-357507.poap.metadata
-//       where lower(name) like "%${keyword}%"
-//       or lower(description) like "%${keyword}%"
-//       order by start_date desc`;
+    async saveProfileToCeramic(userId: number, guildId: number, level: number): Promise<string[]> {
+        const entry = await this.userSessionRepository.findOne({ 
+            where: { userId, guildId }
+        });
 
-//       return this.bqCacheService.getDataBySql(sql)
-//   }
-//   }
+        if (!entry) {
+            return ["1", "session does not exist"];
+        }
+        
+        const session = await DIDSession.fromSession(entry.session)
+        if (session.isExpired) {
+            return ["2", "session is expired"];
+        }
+        this.ceramic.did = session.did
+        
+        const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
+        const store = new DIDDataStore({ ceramic: this.ceramic, model })
+        const address = session.did.parent
+        
+        const stream = await store.get('mushroomCards')
+        const cards = stream["cards"]
+        const card = cards.find((card) => {
+            return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
+        });
 
-//   async getPoapBayc(): Promise<string> {
-//     const sql = `SELECT * FROM sound-district-357507.intermediate_data.poap_bayc`;
+        const updateTime = String(Date.now());
 
-//     return this.bqCacheService.getDataBySql(sql)
-// }
+        if (!card) {
+            const newCard = {}
+            newCard["profile"] = {
+                guildId, userId, level, address, updatedAt: updateTime
+            }
+            newCard["signature"] = this.signMessage(JSON.stringify(newCard["profile"]))
+            newCard["signerAddr"] = this.signer.address
+            cards.push(newCard)
+
+        } else {
+            card["profile"] = {
+                guildId, userId, level, address, updatedAt: updateTime
+            }
+            card["signature"] = this.signMessage(JSON.stringify(card["profile"]))
+            card["signerAddr"] = this.signer.address
+        }
+
+        const streamID = await store.set('mushroomCards', { cards })
+        return ["0", streamID.toString()]
+    }
+
+    // sign data
+    sign_profile(name: string): void {
+        console.log("pass");
+    }
+
+    // write to ceramic
+    write_profile(): void{
+        console.log("pass");
+    }
 
 
 }
