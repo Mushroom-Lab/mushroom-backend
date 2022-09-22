@@ -126,22 +126,31 @@ export class CeramicService {
 
         console.log("getProfileFromCeramic", userId, guildId)
 
+        console.log("1")
+
         if (userId === undefined || guildId === undefined) {
             return JSON.stringify({"status": 1});
         }
+        console.log("2")
 
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
 
+        console.log("3")
+
         if (!entry) {
             return JSON.stringify({"status": 1});
         }
+
+        console.log("4")
 
         const session = await DIDSession.fromSession(entry.session)
         const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const did = session.did.parent
+
+        console.log("5")
 
         const stream = await store.get('mushroomCards', did)
         const cards = stream["cards"]
@@ -149,7 +158,10 @@ export class CeramicService {
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
 
+        console.log("6")
+
         if (!card) {
+            console.log("7")
             return JSON.stringify({"status": 1});
         } else {
             return JSON.stringify ({
