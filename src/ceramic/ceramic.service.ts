@@ -72,6 +72,10 @@ export class CeramicService {
     async saveProfileToCeramic(userId: number, guildId: number, level: number) {
 
         console.log("saveProfileToCeramic", userId, guildId, level)
+        if (userId === undefined || guildId === undefined || level === undefined) {
+            return JSON.stringify({"status": 1});
+        }
+
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
@@ -121,6 +125,11 @@ export class CeramicService {
     async getProfileFromCeramic(userId: number, guildId: number) {
 
         console.log("getProfileFromCeramic", userId, guildId)
+
+        if (userId === undefined || guildId === undefined) {
+            return JSON.stringify({"status": 1});
+        }
+
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
