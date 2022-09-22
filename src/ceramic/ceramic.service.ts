@@ -75,12 +75,12 @@ export class CeramicService {
         });
 
         if (!entry) {
-            return JSON.stringify({"status": "1"});
+            return JSON.stringify({"status": 1});
         }
         
         const session = await DIDSession.fromSession(entry.session)
         if (session.isExpired) {
-            return JSON.stringify({"status": "2"});
+            return JSON.stringify({"status": 2});
         }
         this.ceramic.did = session.did
         
@@ -114,7 +114,7 @@ export class CeramicService {
             card["signerAddr"] = this.signer.address
         }
         const streamID = await store.set('mushroomCards', { cards })
-        return JSON.stringify({"status": "0", "stream_id": streamID.toString()})
+        return JSON.stringify({"status": 0, "stream_id": streamID.toString()})
     }
 
 }
