@@ -124,7 +124,7 @@ export class CeramicService {
 
     async getProfileFromCeramic(userId: number, guildId: number) {
 
-        console.log("getProfileFromCeramic", userId, guildId)
+        console.log("getProfileFromCeramic", userId, guildId, typeof(userId), typeof(guildId))
 
         console.log("1")
 
