@@ -156,8 +156,13 @@ export class CeramicService {
         const cards = stream["cards"]
 
         console.log("cards", JSON.stringify(cards))
+        cards [{"profile":{"level":67,"userId":0,"address":"did:pkh:eip155:1:0x2d086c1490f211c269c9ebc240d9e3defa18c6d1","guildId":0,"updatedAt":"1663866642821"},"signature":"0xbdbb9c2c00a5a3736303a42cd0281c74596d7d0bfa5dc02c55b1097571de8caa39fb0e423d340f7e0264fa2534fd75b1081bee8b477d3738f213a8fecb8bded61c","signerAddr":"0xBcF39b776C0Db92b4b6144d29F61010aa28A2feE"}]
 
         const card = cards.find((card) => {
+            console.log("", card["profile"]["guildId"])
+            console.log("", card["profile"]["userId"])
+            console.log("", guildId)
+            console.log("", userId)
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
 
