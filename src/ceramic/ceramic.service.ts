@@ -124,54 +124,28 @@ export class CeramicService {
 
     async getProfileFromCeramic(userId: number, guildId: number) {
 
-        console.log("getProfileFromCeramic", userId, guildId, typeof(userId), typeof(guildId))
-
-        console.log("1")
-
-        // if (userId === undefined || guildId === undefined) {
-        //     return JSON.stringify({"status": 1});
-        // }
-        console.log("2")
-
+        console.log("getProfileFromCeramic", userId, guildId)
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
 
-        console.log("3")
-
         if (!entry) {
             return JSON.stringify({"status": 1});
         }
-
-        console.log("4")
 
         const session = await DIDSession.fromSession(entry.session)
         const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const did = session.did.parent
 
-        console.log("5")
-
         const stream = await store.get('mushroomCards', did)
         const cards = stream["cards"]
 
-        console.log("cards", JSON.stringify(cards))
-        cards [{"profile":{"level":67,"userId":0,"address":"did:pkh:eip155:1:0x2d086c1490f211c269c9ebc240d9e3defa18c6d1","guildId":0,"updatedAt":"1663866642821"},"signature":"0xbdbb9c2c00a5a3736303a42cd0281c74596d7d0bfa5dc02c55b1097571de8caa39fb0e423d340f7e0264fa2534fd75b1081bee8b477d3738f213a8fecb8bded61c","signerAddr":"0xBcF39b776C0Db92b4b6144d29F61010aa28A2feE"}]
-
         const card = cards.find((card) => {
-            console.log("", card["profile"]["guildId"])
-            console.log("", card["profile"]["userId"])
-            console.log("", guildId)
-            console.log("", userId)
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
 
-        console.log("card", JSON.stringify(card))
-
-        console.log("6")
-
         if (!card) {
-            console.log("7")
             return JSON.stringify({"status": 1});
         } else {
             return JSON.stringify ({
