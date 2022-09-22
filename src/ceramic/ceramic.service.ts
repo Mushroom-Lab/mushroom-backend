@@ -57,6 +57,8 @@ export class CeramicService {
     async saveUserSession(session: string, user_id: number, guild_id: number, address: string) {        
         // const hash = shajs('sha256').update(`${user_id}_${guild_id}`).digest('hex').toString();
         const hash = new shajs.sha256().update(`${user_id}_${guild_id}`).digest('hex').toString();
+        
+        console.log("saveUserSession user_id", user_id)
         const entry = this.userSessionRepository.create({
             hash: hash, session: session, userId: user_id, guildId: guild_id, address: address,
         });
