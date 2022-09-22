@@ -154,9 +154,14 @@ export class CeramicService {
 
         const stream = await store.get('mushroomCards', did)
         const cards = stream["cards"]
+
+        console.log("cards", JSON.stringify(cards))
+
         const card = cards.find((card) => {
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
+
+        console.log("card", JSON.stringify(card))
 
         console.log("6")
 
