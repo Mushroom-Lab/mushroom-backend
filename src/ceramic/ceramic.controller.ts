@@ -39,8 +39,8 @@ export class CeramicController {
 
     @Get('get_profile')
     async getProfileFromCeramic(
-        @Body('guild_id') guild_id: number,
-        @Body('user_id') user_id: number
+        @Query('guild_id') guild_id: number,
+        @Query('user_id') user_id: number
     ): Promise<string> {
         return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
     }
