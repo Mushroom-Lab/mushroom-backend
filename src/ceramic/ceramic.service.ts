@@ -55,17 +55,11 @@ export class CeramicService {
     // session <-> db
     // id number, user_id number, guild_id number, session string, address string
     async saveUserSession(session: string, user_id: number, guild_id: number, address: string) {        
-        // const hash = shajs('sha256').update(`${user_id}_${guild_id}`).digest('hex').toString();
         const hash = new shajs.sha256().update(`${user_id}_${guild_id}`).digest('hex').toString();
         
-        console.log("saveUserSession user_id", user_id)
         const entry = this.userSessionRepository.create({
             hash: hash, session: session, userId: user_id, guildId: guild_id, address: address,
         });
-
-        console.log("saveUserSession entry", JSON.stringify(entry))
-        console.log("saveUserSession entry", JSON.stringify(entry.userId))
-        console.log("saveUserSession entry", JSON.stringify(entry.guildId))
         
         await this.userSessionRepository.save(entry); // save = insert or update
     }
@@ -93,6 +87,8 @@ export class CeramicService {
         const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const address = session.did.parent
+
+        await store.set('mushroomCards', { "cards": []})
         
         const stream = await store.get('mushroomCards')
         const cards = stream["cards"]
