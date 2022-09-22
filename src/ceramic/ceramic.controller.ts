@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post, Param } from "@nestjs/common";
+import { Controller, Get, Query, Post, Param, Body } from "@nestjs/common";
 import { CeramicService } from "./ceramic.service";
 
 @Controller('ceramic')
@@ -17,10 +17,10 @@ export class CeramicController {
 
     @Post('save_session')
     async saveSession(
-        @Param('session') session: string,
-        @Param('user_id') user_id: number,
-        @Param('guild_id') guild_id: number,
-        @Param('address') address: string
+        @Body('session') session: string,
+        @Body('user_id') user_id: number,
+        @Body('guild_id') guild_id: number,
+        @Body('address') address: string
     ) {
 
         console.log("user_id", user_id)
@@ -30,9 +30,9 @@ export class CeramicController {
 
     @Post('write_profile')
     async postProfileToCeramic(
-        @Param('guild_id') guild_id: number,
-        @Param('user_id') user_id: number,
-        @Param('level') level: number
+        @Body('guild_id') guild_id: number,
+        @Body('user_id') user_id: number,
+        @Body('level') level: number
     ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
