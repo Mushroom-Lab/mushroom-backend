@@ -128,9 +128,9 @@ export class CeramicService {
 
         console.log("1")
 
-        if (userId === undefined || guildId === undefined) {
-            return JSON.stringify({"status": 1});
-        }
+        // if (userId === undefined || guildId === undefined) {
+        //     return JSON.stringify({"status": 1});
+        // }
         console.log("2")
 
         const entry = await this.userSessionRepository.findOne({ 
