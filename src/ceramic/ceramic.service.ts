@@ -59,6 +59,7 @@ export class CeramicService {
         const entry = this.userSessionRepository.create({
             hash, session, userId: user_id, guildId: guild_id, address,
         });
+        
         await this.userSessionRepository.save(entry); // save = insert or update
     }
 
@@ -67,18 +68,18 @@ export class CeramicService {
         return signature
     }
 
-    async saveProfileToCeramic(userId: number, guildId: number, level: number): Promise<string[]> {
+    async saveProfileToCeramic(userId: number, guildId: number, level: number) {
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
 
         if (!entry) {
-            return ["1", "session does not exist"];
+            return JSON.stringify({"status": "1"});
         }
         
         const session = await DIDSession.fromSession(entry.session)
         if (session.isExpired) {
-            return ["2", "session is expired"];
+            return JSON.stringify({"status": "2"});
         }
         this.ceramic.did = session.did
         
@@ -112,18 +113,7 @@ export class CeramicService {
         }
 
         const streamID = await store.set('mushroomCards', { cards })
-        return ["0", streamID.toString()]
+        return JSON.stringify({"status": "0", "stream_id": streamID.toString()})
     }
-
-    // sign data
-    sign_profile(name: string): void {
-        console.log("pass");
-    }
-
-    // write to ceramic
-    write_profile(): void{
-        console.log("pass");
-    }
-
 
 }

@@ -22,16 +22,19 @@ export class CeramicController {
         @Query('guild_id') guild_id: number,
         @Query('address') address: string
     ) {
-        this.ceramicService.saveDIDSession(session, user_id, guild_id, address)
+        this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
-
-
 
     @Post('write_profile')
     async postProfileToCeramic(
-    ): Promise<string> {
-        console.log("this is ceramic write_profile");
-        return "k2t6wyfsu4pg01w0xdl8xl7wkt62fudnhg9axfiqdsolbblvy7bubp2qmnn2je";
+        @Query('guild_id') guild_id: number,
+        @Query('user_id') user_id: number,
+        @Query('level') level: number
+    ): Promise<string[]> {
+        // ["0", streamID.toString()]
+        // ["1", "session does not exist"]
+        // ["2", "session is expired"]
+        return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
     }
 
 
