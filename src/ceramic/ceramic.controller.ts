@@ -22,6 +22,9 @@ export class CeramicController {
         @Param('guild_id') guild_id: number,
         @Param('address') address: string
     ) {
+
+        console.log("user_id", user_id)
+        console.log("guild_id", guild_id)
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
 
