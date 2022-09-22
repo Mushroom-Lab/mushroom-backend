@@ -88,17 +88,23 @@ export class CeramicService {
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const address = session.did.parent
 
-        await store.set('mushroomCards', { "cards": []})
+        const streamId = await store.set('mushroomCards', { "cards": []})
+        console.log("streamId", streamId)
         
         const stream = await store.get('mushroomCards')
+        console.log("stream", stream)
         const cards = stream["cards"]
+        console.log("cards", cards)
         const card = cards.find((card) => {
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
+        console.log("card", card)
 
         const updateTime = String(Date.now());
 
         if (!card) {
+
+            console.log("card1")
             const newCard = {}
             newCard["profile"] = {
                 guildId, userId, level, address, updatedAt: updateTime
@@ -106,6 +112,7 @@ export class CeramicService {
             newCard["signature"] = this.signMessage(JSON.stringify(newCard["profile"]))
             newCard["signerAddr"] = this.signer.address
             cards.push(newCard)
+            console.log("cards1", cards)
 
         } else {
             card["profile"] = {
@@ -113,9 +120,11 @@ export class CeramicService {
             }
             card["signature"] = this.signMessage(JSON.stringify(card["profile"]))
             card["signerAddr"] = this.signer.address
+            console.log("card2", card)
         }
-
+        console.log("card3", cards)
         const streamID = await store.set('mushroomCards', { cards })
+        console.log("card4", cards)
         return JSON.stringify({"status": "0", "stream_id": streamID.toString()})
     }
 
