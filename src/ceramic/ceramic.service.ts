@@ -61,7 +61,9 @@ export class CeramicService {
             hash: hash, session: session, userId: user_id, guildId: guild_id, address: address,
         });
 
-        console.log("saveUserSession entry", entry)
+        console.log("saveUserSession entry", JSON.stringify(entry))
+        console.log("saveUserSession entry", JSON.stringify(entry.userId))
+        console.log("saveUserSession entry", JSON.stringify(entry.guildId))
         
         await this.userSessionRepository.save(entry); // save = insert or update
     }
