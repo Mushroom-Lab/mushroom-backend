@@ -87,8 +87,8 @@ export class CeramicService {
         const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const address = session.did.parent
-
-        const streamId = await store.set('mushroomCards', { "cards": []})
+        console.log("streamId0")
+        const streamId = await store.set('mushroomCards', { "cards": [] })
         console.log("streamId", streamId)
         
         const stream = await store.get('mushroomCards')
