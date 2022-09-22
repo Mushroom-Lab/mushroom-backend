@@ -22,9 +22,6 @@ export class CeramicController {
         @Body('guild_id') guild_id: number,
         @Body('address') address: string
     ) {
-
-        console.log("user_id", user_id)
-        console.log("guild_id", guild_id)
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
 

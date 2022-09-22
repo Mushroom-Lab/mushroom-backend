@@ -39,7 +39,7 @@ export class BqCacheService {
 
     async upsertCache(sql: string, result: string) {        
         const bqCache = this.bqCacheRepository.create({
-            hash: shajs('sha256').update(sql).digest('hex').toString(),
+            hash: new shajs.sha256().update(sql).digest('hex').toString(),
             sql: sql,
             result: result,
             updatedAt: new Date(),
@@ -48,7 +48,7 @@ export class BqCacheService {
     }
 
     async getDataBySql(sql: string): Promise<string> {
-        const hash = shajs('sha256').update(sql).digest('hex').toString();
+        const hash = new shajs.sha256().update(sql).digest('hex').toString();
         const bqCache = await this.findCacheByHash(hash);
         if (bqCache !== undefined) {
             return bqCache.result;

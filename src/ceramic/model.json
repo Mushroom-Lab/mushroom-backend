@@ -1,1 +1,8 @@
-{"definitions":{"myNote":"kjzl6cwe1jw145q2oqh9rzax2yrl8w2zopwxm5zu9vl7cpmm5ujr5xjb0z6vvg3"},"schemas":{"SimpleNote":"ceramic://k3y52l7qbv1frxjl5sncosl8e2zqzykkof09o2dn9madda93gs96utx2ogcs9as5c"},"tiles":{}}
+{
+  "definitions": {
+    "mushroomCards": "kjzl6cwe1jw149cvdnq7mtw5c1s9wgx7vbcbljs03jl2lk5ez52h33mszf3ghes"
+  },
+  "schemas": {
+    "MushroomCards": "ceramic://k3y52l7qbv1frxidaabkxjban6ky9qs2a9j51lu3ix4fjej6mhacqrlk43h9svfnk"},
+  "tiles":{}
+}
