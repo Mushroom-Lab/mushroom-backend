@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post } from "@nestjs/common";
+import { Controller, Get, Query, Post, Param } from "@nestjs/common";
 import { CeramicService } from "./ceramic.service";
 
 @Controller('ceramic')
@@ -7,9 +7,9 @@ export class CeramicController {
 
     @Get('write')
     async getTestCeramic(
-        @Query('name') name: string,
-        @Query('address') address: string,
-        @Query('date') date: string
+        @Param('name') name: string,
+        @Param('address') address: string,
+        @Param('date') date: string
     ): Promise<string> {
         console.log("this is ceramic write")
         return this.ceramicService.test(name, address, date)
@@ -17,19 +17,19 @@ export class CeramicController {
 
     @Post('save_session')
     async saveSession(
-        @Query('session') session: string,
-        @Query('user_id') user_id: number,
-        @Query('guild_id') guild_id: number,
-        @Query('address') address: string
+        @Param('session') session: string,
+        @Param('user_id') user_id: number,
+        @Param('guild_id') guild_id: number,
+        @Param('address') address: string
     ) {
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
 
     @Post('write_profile')
     async postProfileToCeramic(
-        @Query('guild_id') guild_id: number,
-        @Query('user_id') user_id: number,
-        @Query('level') level: number
+        @Param('guild_id') guild_id: number,
+        @Param('user_id') user_id: number,
+        @Param('level') level: number
     ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
