@@ -37,6 +37,14 @@ export class CeramicController {
         return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
     }
 
+    @Get('get_profile')
+    async getProfileFromCeramic(
+        @Body('guild_id') guild_id: number,
+        @Body('user_id') user_id: number
+    ): Promise<string> {
+        return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
+    }
+
 
     // @Get('holders_project_distribution')
     // async getHoldersProjectDistribution(@Query('contract') contract: string): Promise<string> {

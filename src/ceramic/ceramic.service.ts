@@ -97,12 +97,11 @@ export class CeramicService {
         const updateTime = String(Date.now());
 
         if (!card) {
-
             const newCard = {}
             newCard["profile"] = {
                 guildId, userId, level, address, updatedAt: updateTime
             }
-            newCard["signature"] = this.signMessage(JSON.stringify(newCard["profile"]))
+            newCard["signature"] = await this.signMessage(JSON.stringify(newCard["profile"]))
             newCard["signerAddr"] = this.signer.address
             cards.push(newCard)
 
@@ -110,11 +109,42 @@ export class CeramicService {
             card["profile"] = {
                 guildId, userId, level, address, updatedAt: updateTime
             }
-            card["signature"] = this.signMessage(JSON.stringify(card["profile"]))
+            card["signature"] = await this.signMessage(JSON.stringify(card["profile"]))
             card["signerAddr"] = this.signer.address
         }
         const streamID = await store.set('mushroomCards', { cards })
         return JSON.stringify({"status": 0, "stream_id": streamID.toString()})
+    }
+
+    async getProfileFromCeramic(userId: number, guildId: number) {
+
+        const entry = await this.userSessionRepository.findOne({ 
+            where: { userId, guildId }
+        });
+
+        if (!entry) {
+            return JSON.stringify({"status": 1});
+        }
+
+        const session = await DIDSession.fromSession(entry.session)
+        const model = new DataModel({ ceramic: this.ceramic, aliases: modelAliases })
+        const store = new DIDDataStore({ ceramic: this.ceramic, model })
+        const did = session.did.parent
+
+        const stream = await store.get('mushroomCards', did)
+        const cards = stream["cards"]
+        const card = cards.find((card) => {
+            return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
+        });
+
+        if (!card) {
+            return JSON.stringify({"status": 1});
+        } else {
+            return JSON.stringify ({
+                "status": 0,
+                "profile": card["profile"]
+            })
+        }
     }
 
 }
