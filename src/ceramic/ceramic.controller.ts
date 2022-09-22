@@ -42,18 +42,9 @@ export class CeramicController {
         @Query('guild_id') guild_id: number,
         @Query('user_id') user_id: number
     ): Promise<string> {
+        // ["0", profile]
+        // ["1", "user+guild not exist"]
         return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
     }
-
-
-    // @Get('holders_project_distribution')
-    // async getHoldersProjectDistribution(@Query('contract') contract: string): Promise<string> {
-    //     return this.dataService.getHoldersProjectDistribution(contract)
-    // }
-
-    // @Get('search_poap')
-    // async getPoapByKeywords(@Query('keyword') keyword: string): Promise<string> {
-    //     return this.dataService.getPoapByKeywords(keyword)
-    // }
 
 }

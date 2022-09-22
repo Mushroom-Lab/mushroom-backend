@@ -70,6 +70,8 @@ export class CeramicService {
     }
 
     async saveProfileToCeramic(userId: number, guildId: number, level: number) {
+
+        console.log("saveProfileToCeramic", userId, guildId, level)
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
@@ -118,6 +120,7 @@ export class CeramicService {
 
     async getProfileFromCeramic(userId: number, guildId: number) {
 
+        console.log("getProfileFromCeramic", userId, guildId)
         const entry = await this.userSessionRepository.findOne({ 
             where: { userId, guildId }
         });
