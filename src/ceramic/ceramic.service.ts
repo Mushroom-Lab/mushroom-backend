@@ -88,7 +88,17 @@ export class CeramicService {
         const store = new DIDDataStore({ ceramic: this.ceramic, model })
         const address = session.did.parent
         console.log("streamId0")
-        const streamId = await store.set('mushroomCards', { "cards": [] })
+
+        const mushroomCards = [{
+            "server": "Mushroom Laboratory",
+            "name": "TESLA#4320",
+            "level": 3,
+            "rank": 1,
+            "updatedAt": "1663429711649"
+          }
+        ]
+
+        const streamId = await store.set('mushroomCards', { "cards": mushroomCards })
         console.log("streamId", streamId)
         
         const stream = await store.get('mushroomCards')
