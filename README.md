@@ -1,3 +1,5 @@
+# Mushroom Backend
+
 ## Installation
 
 ```bash
