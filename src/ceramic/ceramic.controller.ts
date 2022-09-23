@@ -23,7 +23,7 @@ export class CeramicController {
         @Body('guild_id') guild_id: string,
         @Body('address') address: string,
     ) {
-        console.log(user_id, guild_id, address)
+        console.log(user_id, isNotEmpty(user_id), guild_id, isNotEmpty(guild_id), address, isNotEmpty(address))
         if (isNotEmpty(session) || isNotEmpty(user_id) || isNotEmpty(guild_id) || isNotEmpty(address)) {
             throw new BadRequestException("Validation failed(string is empty)");
         }
