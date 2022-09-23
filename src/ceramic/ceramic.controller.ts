@@ -23,11 +23,12 @@ export class CeramicController {
         @Body('guild_id') guild_id: string,
         @Body('address') address: string,
     ) {
-        console.log(user_id, isNotEmpty(user_id), guild_id, isNotEmpty(guild_id), address, isNotEmpty(address))
-        if (isNotEmpty(session) || isNotEmpty(user_id) || isNotEmpty(guild_id) || isNotEmpty(address)) {
+        if (isNotEmpty(session) && isNotEmpty(user_id) && isNotEmpty(guild_id) && isNotEmpty(address)) {
+            this.ceramicService.saveUserSession(session, user_id, guild_id, address);
+            
+        } else {
             throw new BadRequestException("Validation failed(string is empty)");
         }
-        this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
 
     @Post('write_profile')
@@ -39,10 +40,12 @@ export class CeramicController {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
-        if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
+        if (isNotEmpty(user_id) && isNotEmpty(guild_id)) {
+            return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
+        } else {
             throw new BadRequestException("Validation failed(string is empty)");
         }
-        return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
+        
     }
 
     @Get('get_profile')
@@ -52,10 +55,12 @@ export class CeramicController {
     ): Promise<string> {
         // ["0", profile]
         // ["1", "user+guild not exist"]
-        if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
+        if (isNotEmpty(user_id) && isNotEmpty(guild_id)) {
+            return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
+        } else {
             throw new BadRequestException("Validation failed(string is empty)");
         }
-        return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
+        
     }
 
 }
