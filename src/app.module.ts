@@ -10,11 +10,11 @@ import { DataModule } from './data/data.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'test',
+      host: process.env.PG_HOST,
+      port: parseInt(process.env.PG_PORT),
+      username: process.env.PG_USERNAMR,
+      password: process.env.PG_PASSWORD,
+      database: process.env.PG_DATABASE,
       entities: [BqCache, UserSession],
       synchronize: true,
     }),
