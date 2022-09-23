@@ -23,8 +23,9 @@ export class CeramicController {
         @Body('guild_id') guild_id: string,
         @Body('address') address: string,
     ) {
+        console.log(user_id, guild_id, address)
         if (isNotEmpty(session) || isNotEmpty(user_id) || isNotEmpty(guild_id) || isNotEmpty(address)) {
-            throw new BadRequestException("string is empty");
+            throw new BadRequestException("Validation failed(string is empty)");
         }
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
@@ -39,7 +40,7 @@ export class CeramicController {
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
         if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
-            throw new BadRequestException("string is empty");
+            throw new BadRequestException("Validation failed(string is empty)");
         }
         return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
     }
@@ -52,7 +53,7 @@ export class CeramicController {
         // ["0", profile]
         // ["1", "user+guild not exist"]
         if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
-            throw new BadRequestException("string is empty");
+            throw new BadRequestException("Validation failed(string is empty)");
         }
         return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
     }
