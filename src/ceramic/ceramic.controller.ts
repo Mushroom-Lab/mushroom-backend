@@ -1,4 +1,5 @@
-import { Controller, Get, Query, Post, Param, Body, ParseIntPipe } from "@nestjs/common";
+import { Controller, Get, Query, Post, Param, Body, ParseIntPipe, Res, HttpStatus, BadRequestException } from "@nestjs/common";
+import { isNotEmpty } from 'class-validator';
 import { CeramicService } from "./ceramic.service";
 
 @Controller('ceramic')
@@ -18,32 +19,41 @@ export class CeramicController {
     @Post('save_session')
     async saveSession(
         @Body('session') session: string,
-        @Body('user_id', new ParseIntPipe()) user_id: number,
-        @Body('guild_id', new ParseIntPipe()) guild_id: number,
-        @Body('address') address: string
+        @Body('user_id') user_id: string,
+        @Body('guild_id') guild_id: string,
+        @Body('address') address: string,
     ) {
+        if (isNotEmpty(session) || isNotEmpty(user_id) || isNotEmpty(guild_id) || isNotEmpty(address)) {
+            throw new BadRequestException("string is empty");
+        }
         this.ceramicService.saveUserSession(session, user_id, guild_id, address);
     }
 
     @Post('write_profile')
     async postProfileToCeramic(
-        @Body('guild_id', new ParseIntPipe()) guild_id: number,
-        @Body('user_id', new ParseIntPipe()) user_id: number,
-        @Body('level', new ParseIntPipe()) level: number
+        @Body('guild_id') guild_id: string,
+        @Body('user_id') user_id: string,
+        @Body('level') level: string
     ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
+        if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
+            throw new BadRequestException("string is empty");
+        }
         return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
     }
 
     @Get('get_profile')
     async getProfileFromCeramic(
-        @Query('guild_id', new ParseIntPipe()) guild_id: number,
-        @Query('user_id', new ParseIntPipe()) user_id: number
+        @Query('guild_id') guild_id: string,
+        @Query('user_id') user_id: string
     ): Promise<string> {
         // ["0", profile]
         // ["1", "user+guild not exist"]
+        if (isNotEmpty(user_id) || isNotEmpty(guild_id)) {
+            throw new BadRequestException("string is empty");
+        }
         return this.ceramicService.getProfileFromCeramic(user_id, guild_id);
     }
 

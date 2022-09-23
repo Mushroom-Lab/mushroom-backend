@@ -9,11 +9,11 @@ export class UserSession {
 
   @Column()
   @Index()
-  userId: number;
+  userId: string;
 
   @Column()
   @Index()
-  guildId: number;
+  guildId: string;
 
   @Column()
   @Index()

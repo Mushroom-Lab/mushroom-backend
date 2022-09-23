@@ -54,7 +54,7 @@ export class CeramicService {
 
     // session <-> db
     // id number, user_id number, guild_id number, session string, address string
-    async saveUserSession(session: string, user_id: number, guild_id: number, address: string) {        
+    async saveUserSession(session: string, user_id: string, guild_id: string, address: string) {        
         const hash = new shajs.sha256().update(`${user_id}_${guild_id}`).digest('hex').toString();
         
         const entry = this.userSessionRepository.create({
@@ -69,7 +69,7 @@ export class CeramicService {
         return signature
     }
 
-    async saveProfileToCeramic(userId: number, guildId: number, level: number) {
+    async saveProfileToCeramic(userId: string, guildId: string, level: string) {
 
         console.log("saveProfileToCeramic", userId, guildId, level)
         if (userId === undefined || guildId === undefined || level === undefined) {
@@ -122,7 +122,7 @@ export class CeramicService {
         return JSON.stringify({"status": 0, "stream_id": streamID.toString()})
     }
 
-    async getProfileFromCeramic(userId: number, guildId: number) {
+    async getProfileFromCeramic(userId: string, guildId: string) {
 
         console.log("getProfileFromCeramic", userId, guildId)
         const entry = await this.userSessionRepository.findOne({ 
