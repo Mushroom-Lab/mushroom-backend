@@ -40,8 +40,8 @@ export class CeramicController {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
-        if (isNotEmpty(user_id) && isNotEmpty(guild_id)) {
-            console.log("postProfileToCeramic", guild_id, user_id, level)
+        console.log("postProfileToCeramic", guild_id, user_id, level)
+        if (isNotEmpty(user_id) && isNotEmpty(guild_id) && isNotEmpty(level)) {
             return this.ceramicService.saveProfileToCeramic(guild_id, user_id, level);
         } else {
             throw new BadRequestException("Validation failed(string is empty)");
