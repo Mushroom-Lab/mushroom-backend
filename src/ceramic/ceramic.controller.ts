@@ -24,8 +24,8 @@ export class CeramicController {
         @Body('address') address: string,
     ) {
         if (isNotEmpty(session) && isNotEmpty(user_id) && isNotEmpty(guild_id) && isNotEmpty(address)) {
+            console.log("saveSession", session, user_id, guild_id, address)
             this.ceramicService.saveUserSession(session, user_id, guild_id, address);
-            
         } else {
             throw new BadRequestException("Validation failed(string is empty)");
         }
