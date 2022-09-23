@@ -101,6 +101,7 @@ export class CeramicService {
         });
 
         const updateTime = String(Date.now());
+        var content = card
 
         if (!card) {
             const newCard = {}
@@ -110,6 +111,7 @@ export class CeramicService {
             newCard["signature"] = await this.signMessage(JSON.stringify(newCard["profile"]))
             newCard["signerAddr"] = this.signer.address
             cards.push(newCard)
+            content = newCard
 
         } else {
             card["profile"] = {
@@ -119,7 +121,7 @@ export class CeramicService {
             card["signerAddr"] = this.signer.address
         }
         const streamID = await store.set('mushroomCards', { cards })
-        return JSON.stringify({"status": 0, "stream_id": streamID.toString()})
+        return JSON.stringify({"status": 0, "stream_id": streamID.toString(), "content": content})
     }
 
     async getProfileFromCeramic(userId: string, guildId: string) {
