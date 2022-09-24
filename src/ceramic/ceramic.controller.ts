@@ -35,14 +35,15 @@ export class CeramicController {
     async postProfileToCeramic(
         @Body('guild_id') guild_id: string,
         @Body('user_id') user_id: string,
-        @Body('level') level: string
+        @Body('level') level: string,
+        @Body('popularity_level') popularity_level: string
     ): Promise<string> {
         // ["0", streamID.toString()]
         // ["1", "session does not exist"]
         // ["2", "session is expired"]
         console.log("postProfileToCeramic", guild_id, user_id, level)
-        if (isNotEmpty(user_id) && isNotEmpty(guild_id) && isNotEmpty(level)) {
-            return this.ceramicService.saveProfileToCeramic(user_id, guild_id, level);
+        if (isNotEmpty(user_id) && isNotEmpty(guild_id) && isNotEmpty(level) && isNotEmpty(popularity_level)) {
+            return this.ceramicService.saveProfileToCeramic(user_id, guild_id, level, popularity_level);
         } else {
             throw new BadRequestException("Validation failed(string is empty)");
         }

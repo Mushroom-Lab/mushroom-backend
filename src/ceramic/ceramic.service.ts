@@ -69,10 +69,10 @@ export class CeramicService {
         return signature
     }
 
-    async saveProfileToCeramic(userId: string, guildId: string, level: string) {
+    async saveProfileToCeramic(userId: string, guildId: string, level: string, popularityLevel: string) {
 
         console.log("saveProfileToCeramic", userId, guildId, level)
-        if (userId === undefined || guildId === undefined || level === undefined) {
+        if (userId === undefined || guildId === undefined || level === undefined || popularityLevel === undefined) {
             return JSON.stringify({"status": 1});
         }
 
@@ -106,7 +106,7 @@ export class CeramicService {
         if (!card) {
             const newCard = {}
             newCard["profile"] = {
-                guildId, userId, level, address, updatedAt: updateTime
+                guildId, userId, level, popularityLevel, address, updatedAt: updateTime
             }
             newCard["signature"] = await this.signMessage(JSON.stringify(newCard["profile"]))
             newCard["signerAddr"] = this.signer.address
@@ -115,7 +115,7 @@ export class CeramicService {
 
         } else {
             card["profile"] = {
-                guildId, userId, level, address, updatedAt: updateTime
+                guildId, userId, level, popularityLevel, address, updatedAt: updateTime
             }
             card["signature"] = await this.signMessage(JSON.stringify(card["profile"]))
             card["signerAddr"] = this.signer.address
