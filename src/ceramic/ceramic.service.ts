@@ -71,7 +71,7 @@ export class CeramicService {
 
     async saveProfileToCeramic(userId: string, guildId: string, level: string, popularityLevel: string) {
 
-        console.log("saveProfileToCeramic", userId, guildId, level)
+        console.log("saveProfileToCeramic", userId, guildId, level, popularityLevel)
         if (userId === undefined || guildId === undefined || level === undefined || popularityLevel === undefined) {
             return JSON.stringify({"status": 1});
         }
