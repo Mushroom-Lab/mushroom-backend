@@ -12,6 +12,7 @@ import { Repository } from "typeorm";
 import * as shajs from 'sha.js';
 import { DIDSession } from "did-session";
 import { Wallet, utils } from 'ethers'
+import fetch from "node-fetch";
 
 import modelAliases from './model.json' assert {type: "json"}
 
@@ -67,7 +68,6 @@ export class CeramicService {
         
         return response.status
     }
-      
 
     // session <-> db
     // id number, user_id number, guild_id number, session string, address string

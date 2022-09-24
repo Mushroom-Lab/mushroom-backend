@@ -38,6 +38,7 @@
     "ethers": "^5.7.1",
     "key-did-provider-ed25519": "^2.0.1",
     "key-did-resolver": "^2.1.1",
+    "node-fetch": "^3.2.10",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
