@@ -141,8 +141,9 @@ export class CeramicService {
 
         // notify user using dm
         const dmContent = `You have already linked Discord with your wallet. Check your onchain profile: https://cerscan.com/testnet-clay/stream/${streamID.toString()}`
-        await this.postDMToUser(dmContent, userId)
+        const dmStatus = await this.postDMToUser(dmContent, userId)
 
+        console.log("postDMToUser", dmStatus)
 
         return JSON.stringify({"status": 0, "stream_id": streamID.toString(), "content": content})
     }
