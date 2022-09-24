@@ -52,6 +52,23 @@ export class CeramicService {
         return streamid.toUrl()
     }
 
+    async postDMToUser(content: string, userId: string) {
+        const data = { content }
+        const response = await fetch(
+          `https://connect.mushroom.social:3334/dm/${userId}`,
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        
+        return response.status
+    }
+      
+
     // session <-> db
     // id number, user_id number, guild_id number, session string, address string
     async saveUserSession(session: string, user_id: string, guild_id: string, address: string) {        
@@ -121,6 +138,12 @@ export class CeramicService {
             card["signerAddr"] = this.signer.address
         }
         const streamID = await store.set('mushroomCards', { cards })
+
+        // notify user using dm
+        const dmContent = `You have already linked Discord with your wallet. Check your onchain profile: https://cerscan.com/testnet-clay/stream/${streamID.toString()}`
+        await this.postDMToUser(dmContent, userId)
+
+
         return JSON.stringify({"status": 0, "stream_id": streamID.toString(), "content": content})
     }
 
