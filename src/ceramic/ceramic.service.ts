@@ -95,7 +95,7 @@ export class CeramicService {
         const address = session.did.parent
         
         const stream = await store.get('mushroomCards')
-        const cards = stream["cards"]
+        const cards = stream ? stream["cards"] : [] // if stream is null, set to []
         const card = cards.find((card) => {
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
         });
@@ -141,7 +141,7 @@ export class CeramicService {
         const did = session.did.parent
 
         const stream = await store.get('mushroomCards', did)
-        const cards = stream["cards"]
+        const cards = stream ? stream["cards"] : [] // if stream is null, set to []
 
         const card = cards.find((card) => {
             return card["profile"]["guildId"] === guildId && card["profile"]["userId"] === userId;
