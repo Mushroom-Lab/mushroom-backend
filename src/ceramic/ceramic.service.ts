@@ -86,7 +86,7 @@ export class CeramicService {
         return signature
     }
 
-    async saveProfileToCeramic(userId: string, guildId: string, level: string, popularityLevel: string) {
+    async saveProfileToCeramic(userId: string, guildId: string, level: string, popularityLevel: string, dmContent: string) {
 
         console.log("saveProfileToCeramic", userId, guildId, level, popularityLevel)
         if (userId === undefined || guildId === undefined || level === undefined || popularityLevel === undefined) {
@@ -140,10 +140,12 @@ export class CeramicService {
         const streamID = await store.set('mushroomCards', { cards })
 
         // notify user using dm
-        const dmContent = `You have already linked Discord with your wallet. Check your onchain profile: https://cerscan.com/testnet-clay/stream/${streamID.toString()}`
-        const dmStatus = await this.postDMToUser(dmContent, userId)
-
-        console.log("postDMToUser", dmStatus)
+        if (dmContent) {
+            const fullContent = `${dmContent} Check your onchain profile: https://cerscan.com/testnet-clay/stream/${streamID.toString()}`
+            const dmStatus = await this.postDMToUser(fullContent, userId)
+    
+            console.log("postDMToUser", dmStatus)
+        }
 
         return JSON.stringify({"status": 0, "stream_id": streamID.toString(), "content": content})
     }
