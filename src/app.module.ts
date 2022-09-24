@@ -25,8 +25,9 @@ import { DataModule } from './data/data.module';
   // controllers: [],
   // providers: [],
 })
+export class AppModule {}
+
 
 console.log("process.env.PG_USERNAMR", process.env.PG_USERNAMR)
 console.log("process.env.PG_PASSWORD", process.env.PG_PASSWORD)
 console.log("process.env.PG_DATABASE",  process.env.PG_DATABASE)
-export class AppModule {}
